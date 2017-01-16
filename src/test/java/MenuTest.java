@@ -7,8 +7,6 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -47,7 +45,7 @@ public class MenuTest {
     public void shouldDisplayMessageAskingForOptionNumber() throws IOException {
         when(bufferedReader.readLine()).thenReturn("1", "2");
         menu.askForOption();
-        verify(printStream).println("Enter an option number:");
+        verify(printStream, times(2)).println("Enter an option number:");
     }
 
     @Test
@@ -55,20 +53,6 @@ public class MenuTest {
         menu.displayInvalidInput();
 
         verify(printStream).println("Select a valid option!");
-    }
-
-    @Test
-    public void shouldReturnFalseWhenUserEntersInvalidInput() throws IOException {
-        Boolean userInput = menu.isValidInput("INVALID");
-
-        assertThat(userInput, is(false));
-    }
-
-    @Test
-    public void shouldReturnTrueWhenUserEntersValidInput() throws IOException {
-        Boolean userInput = menu.isValidInput("1");
-
-        assertThat(userInput, is(true));
     }
 
     @Test

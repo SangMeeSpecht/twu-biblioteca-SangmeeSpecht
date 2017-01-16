@@ -28,17 +28,17 @@ public class Menu {
     }
 
     public void askForOption() throws IOException {
-        printStream.println("Enter an option number:");
         String userInput;
 
         while(active) {
+            printStream.println("Enter an option number:");
             userInput = readUserInput();
 
-            if(commandMap.containsKey(userInput)) {
+            if(isAValidInput(userInput)) {
                 Command command = commandMap.get(userInput);
                 command.execute();
 
-                if(userInput == "2") {
+                if(isInputToQuit(userInput)) {
                     break;
                 }
 
@@ -48,19 +48,20 @@ public class Menu {
         }
     }
 
+    private boolean isInputToQuit(String userInput) {
+        return userInput.equals("2");
+    }
+
+    private boolean isAValidInput(String userInput) {
+        return commandMap.containsKey(userInput);
+    }
+
     private String readUserInput() throws IOException {
         return bufferedReader.readLine();
     }
 
     public void displayInvalidInput() throws IOException {
         printStream.println("Select a valid option!");
-    }
-
-    public Boolean isValidInput(String userInput) throws IOException {
-        if(userInput == "1") {
-            return true;
-        }
-        return false;
     }
 }
 
