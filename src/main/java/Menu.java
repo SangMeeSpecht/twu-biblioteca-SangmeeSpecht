@@ -1,19 +1,21 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by sspecht on 1/15/17.
  */
+
 public class Menu {
     private final BufferedReader bufferedReader;
+    private Map<String, Command> commandMap;
     private PrintStream printStream;
 
-    public Menu(PrintStream printStream, BufferedReader bufferedReader) {
+    public Menu(PrintStream printStream, BufferedReader bufferedReader, Map<String, Command> commandMap) {
         this.printStream = printStream;
         this.bufferedReader = bufferedReader;
+        this.commandMap = commandMap;
     }
 
     public void listOptions() {
@@ -29,15 +31,11 @@ public class Menu {
         printStream.println("Enter an option number:");
         String userInput;
 
-        Map<String, Command> commandMap = new HashMap<String, Command>();
-        commandMap.put("1", new DisplayBooksCommand());
-
-
         while(true) {
             userInput = readUserInput();
             if(commandMap.containsKey(userInput)) {
-                Command displayBooksCommand = commandMap.get(userInput);
-                displayBooksCommand.execute();
+                Command command = commandMap.get(userInput);
+                command.execute();
                 break;
             } else {
                 displayInvalidInput();
