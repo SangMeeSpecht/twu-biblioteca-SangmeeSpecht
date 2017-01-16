@@ -28,11 +28,11 @@ public class Main {
         Map<String, Command> commandMap = new HashMap<String, Command>();
         commandMap.put("1", new DisplayBooksCommand(library));
         commandMap.put("2", new QuitCommand(printStream));
+        commandMap.put("3", new CheckoutCommand(library));
 
         Menu menu = new Menu(printStream, bufferedReader, commandMap);
 
         Welcome welcome = new Welcome(printStream);
-
 
         Application application = new Application(welcome, menu);
         application.start();
