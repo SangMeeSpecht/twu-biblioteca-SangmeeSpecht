@@ -1,4 +1,5 @@
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -37,6 +38,7 @@ public class MenuTest {
 
     @Test
     public void shouldDisplayMessageAskingForOptionNumber() throws IOException {
+        when(bufferedReader.readLine()).thenReturn("1");
         menu.askForOption();
         verify(printStream).println("Enter an option number:");
     }
@@ -72,7 +74,7 @@ public class MenuTest {
 
     @Test
     public void shouldAskUserForInputAgainIfInvalidInputEntered() throws IOException {
-        when(bufferedReader.readLine()).thenReturn("2","1");
+        when(bufferedReader.readLine()).thenReturn("INVALID","1");
         menu.askForOption();
         verify(bufferedReader,times(2)).readLine();
     }
