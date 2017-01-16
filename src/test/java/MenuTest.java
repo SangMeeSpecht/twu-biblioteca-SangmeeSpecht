@@ -14,12 +14,14 @@ import static org.mockito.Mockito.*;
 /**
  * Created by sspecht on 1/15/17.
  */
+
 public class MenuTest {
     private Menu menu;
     private PrintStream printStream;
     private BufferedReader bufferedReader;
     private Map<String, Command> commandMap;
     private DisplayBooksCommand displayBooksCommand;
+    private QuitCommand quitCommand;
 
     @Before
     public void setUp() {
@@ -27,8 +29,10 @@ public class MenuTest {
         bufferedReader = mock(BufferedReader.class);
 
         displayBooksCommand = mock(DisplayBooksCommand.class);
+        quitCommand = mock(QuitCommand.class);
         commandMap = new HashMap<String, Command>();
         commandMap.put("1", displayBooksCommand);
+        commandMap.put("2", quitCommand);
 
         menu = new Menu(printStream, bufferedReader, commandMap);
     }
@@ -36,24 +40,14 @@ public class MenuTest {
     @Test
     public void shouldListOptions() {
         menu.listOptions();
-        verify(printStream).println("Options\n1. List Books");
+        verify(printStream).println("Options\n1. List Books\n2. Quit");
     }
 
-//    failed
     @Test
     public void shouldDisplayMessageAskingForOptionNumber() throws IOException {
-        when(bufferedReader.readLine()).thenReturn("1");
+        when(bufferedReader.readLine()).thenReturn("1", "2");
         menu.askForOption();
         verify(printStream).println("Enter an option number:");
-    }
-
-//    failed
-    @Test
-    public void shouldGetUsersMenuChoiceWhenUserEntersOptionNumber() throws IOException {
-        when(bufferedReader.readLine()).thenReturn("1");
-        menu.askForOption();
-        assertThat(menu.askForOption(), is("1"));
-
     }
 
     @Test
@@ -77,12 +71,24 @@ public class MenuTest {
         assertThat(userInput, is(true));
     }
 
-//    failed
     @Test
     public void shouldAskUserForInputAgainIfInvalidInputEntered() throws IOException {
-        when(bufferedReader.readLine()).thenReturn("INVALID","1");
+        when(bufferedReader.readLine()).thenReturn("INVALID","2");
         menu.askForOption();
         verify(bufferedReader,times(2)).readLine();
     }
 
+    @Test
+    public void shouldExecuteTheCommandWhenUserSelectsAValidInput() throws Exception {
+        when(bufferedReader.readLine()).thenReturn("1", "2");
+        menu.askForOption();
+        verify(displayBooksCommand).execute();
+    }
+
+    @Test
+    public void shouldQuitTheProgramWhenUserSelectsQuitOption() throws IOException {
+        when(bufferedReader.readLine()).thenReturn("2");
+        menu.askForOption();
+        verify(quitCommand).execute();
+    }
 }

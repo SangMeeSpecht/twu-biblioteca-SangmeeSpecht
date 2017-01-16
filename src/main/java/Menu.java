@@ -11,6 +11,7 @@ public class Menu {
     private final BufferedReader bufferedReader;
     private Map<String, Command> commandMap;
     private PrintStream printStream;
+    private Boolean active = true;
 
     public Menu(PrintStream printStream, BufferedReader bufferedReader, Map<String, Command> commandMap) {
         this.printStream = printStream;
@@ -19,30 +20,32 @@ public class Menu {
     }
 
     public void listOptions() {
-        String listOfOptions;
-        listOfOptions = "Options\n";
-        listOfOptions += "1. List Books";
-
+        String optionOne = "1. List Books";
+        String optionTwo = "2. Quit";
+        String listOfOptions = String.format("Options\n%s\n%s", optionOne, optionTwo);
 
         printStream.println(listOfOptions);
     }
 
-    public String askForOption() throws IOException {
+    public void askForOption() throws IOException {
         printStream.println("Enter an option number:");
         String userInput;
 
-        while(true) {
+        while(active) {
             userInput = readUserInput();
+
             if(commandMap.containsKey(userInput)) {
                 Command command = commandMap.get(userInput);
                 command.execute();
-                break;
+
+                if(userInput == "2") {
+                    break;
+                }
+
             } else {
                 displayInvalidInput();
             }
         }
-
-        return userInput;
     }
 
     private String readUserInput() throws IOException {
